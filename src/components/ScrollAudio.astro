@@ -80,7 +80,6 @@
 	const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-audio-src]'));
 
 	if (audio && toggle && sections.length > 0) {
-		const INTRO_DELAY_MS = 3000;
 		const INTRO_SRC = new URL(import.meta.env.BASE_URL + 'audio/quote.wav', window.location.origin).href;
 		let activeSrc: string | null = null;
 		let isMuted = false;
@@ -107,21 +106,17 @@
 			attemptPlay();
 		}
 
-		// Plays once, exactly 3 seconds after landing, no matter where the visitor has
-		// scrolled to by then — it always interrupts whatever is currently active.
-		setTimeout(() => {
-			introPlaying = true;
-			audio!.pause();
-			audio!.src = INTRO_SRC;
-			audio!.currentTime = 0;
-			attemptPlay();
-		}, INTRO_DELAY_MS);
+		// Plays once, immediately on landing, ahead of whatever section is in view.
+		introPlaying = true;
+		audio.pause();
+		audio.src = INTRO_SRC;
+		audio.currentTime = 0;
+		attemptPlay();
 
 		audio.addEventListener('ended', () => {
 			if (audio!.src !== INTRO_SRC) return;
 			introPlaying = false;
-			// Hand off immediately to whichever section is current — no extra delay,
-			// the 3-second wait was already spent on the intro.
+			// Hand off immediately to whichever section is current.
 			if (activeSrc) {
 				audio!.src = activeSrc;
 				audio!.currentTime = 0;
