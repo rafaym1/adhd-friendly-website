@@ -1,0 +1,190 @@
+---
+const testimonials = [
+	{ quote: "I've never seen a holistic view of your career like this, all in one place.", cite: 'Kai H. — Corporate tax' },
+	{ quote: "Real numbers, not guesses. I don't have to wonder what I could earn.", cite: 'Jelena V. — Early user' },
+	{ quote: 'I would subscribe for it right now.', cite: 'Karen — Early user' },
+];
+
+const signals = [
+	{ quote: 'Entire classes of jobs will be totally gone.', cite: 'Sam Altman · OpenAI' },
+	{ quote: 'AI could eliminate 50% of entry-level jobs.', cite: 'Dario Amodei · Anthropic' },
+	{ quote: 'AI and robots will replace all jobs.', cite: 'Elon Musk' },
+];
+---
+
+<section class="block" style="padding-top:0;" id="reveals" data-audio-src={`${import.meta.env.BASE_URL}audio/reveals.wav`}>
+	<div class="reveal-row">
+		<details class="reveal">
+			<summary>From early users</summary>
+			<div class="reveal-body">
+				<div class="notes-grid">
+					{
+						testimonials.map((t) => (
+							<div>
+								<p>"{t.quote}"</p>
+								<cite>{t.cite}</cite>
+							</div>
+						))
+					}
+				</div>
+			</div>
+		</details>
+
+		<details class="reveal">
+			<summary>Why this matters</summary>
+			<div class="reveal-body">
+				<div class="signal-row">
+					{
+						signals.map((s) => (
+							<div>
+								<p>"{s.quote}"</p>
+								<cite>{s.cite}</cite>
+							</div>
+						))
+					}
+				</div>
+			</div>
+		</details>
+	</div>
+</section>
+
+<style>
+	.reveal-row {
+		display: flex;
+		gap: 22px;
+		flex-wrap: wrap;
+	}
+
+	.reveal {
+		flex: 1;
+		min-width: 280px;
+	}
+
+	.reveal summary {
+		cursor: pointer;
+		list-style: none;
+		font-family: 'IBM Plex Mono', monospace;
+		font-size: 0.86rem;
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.03em;
+		border: 1.5px solid var(--line-strong);
+		border-radius: 3px;
+		background: var(--paper-card);
+		padding: 0.9em 1.2em;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 10px;
+		box-shadow: 4px 4px 0 var(--shadow);
+	}
+
+	.reveal summary::-webkit-details-marker {
+		display: none;
+	}
+
+	.reveal summary::after {
+		content: 'open +';
+		color: var(--accent-ink);
+		font-weight: 600;
+		font-size: 0.8rem;
+	}
+
+	.reveal[open] summary::after {
+		content: 'close –';
+	}
+
+	.reveal[open] summary {
+		box-shadow: 2px 2px 0 var(--shadow);
+		margin-bottom: 2px;
+	}
+
+	.reveal-body {
+		border: 1.5px solid var(--line-strong);
+		border-top: none;
+		border-radius: 0 0 3px 3px;
+		padding: 22px 22px 6px;
+		background: var(--paper-card);
+		margin-top: -2px;
+	}
+
+	.signal-row {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 0;
+	}
+
+	.signal-row div {
+		padding: 4px 20px;
+		border-left: 1px solid var(--line);
+	}
+
+	.signal-row div:first-child {
+		border-left: none;
+		padding-left: 2px;
+	}
+
+	.signal-row p {
+		margin: 0 0 8px;
+		font-size: 0.92rem;
+		line-height: 1.45;
+		font-style: italic;
+	}
+
+	.signal-row cite {
+		font-family: 'IBM Plex Mono', monospace;
+		font-style: normal;
+		font-size: 0.76rem;
+		color: var(--ink-soft);
+	}
+
+	.notes-grid {
+		display: grid;
+		grid-template-columns: repeat(3, 1fr);
+		gap: 0;
+	}
+
+	.notes-grid > div {
+		padding: 4px 20px;
+		border-left: 1px solid var(--line);
+	}
+
+	.notes-grid > div:first-child {
+		border-left: none;
+		padding-left: 2px;
+	}
+
+	.notes-grid p {
+		font-size: 0.98rem;
+		line-height: 1.5;
+		margin: 0 0 10px;
+	}
+
+	.notes-grid cite {
+		font-family: 'IBM Plex Mono', monospace;
+		font-style: normal;
+		font-size: 0.78rem;
+		color: var(--ink-soft);
+	}
+
+	@media (max-width: 700px) {
+		.signal-row,
+		.notes-grid {
+			grid-template-columns: 1fr;
+			gap: 16px;
+		}
+
+		.signal-row div,
+		.notes-grid > div {
+			border-left: none;
+			border-top: 1px solid var(--line);
+			padding: 16px 2px 4px;
+		}
+
+		.signal-row div:first-child,
+		.notes-grid > div:first-child {
+			border-top: none;
+			padding-top: 0;
+		}
+	}
+</style>

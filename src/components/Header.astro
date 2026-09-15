@@ -1,0 +1,63 @@
+---
+const navLinks = [
+	{ href: '#get', label: 'What you get' },
+	{ href: '#why', label: 'Why Uptomic' },
+];
+---
+
+<header class="site">
+	<a class="logo" href="#top">UP<span>TOM</span>IC</a>
+	<nav class="primary">
+		{navLinks.map((link) => <a href={link.href}>{link.label}</a>)}
+	</nav>
+</header>
+
+<style>
+	header.site {
+		max-width: 1100px;
+		margin-inline: auto;
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		gap: 20px;
+		padding-block: 20px;
+		flex-wrap: wrap;
+		border-bottom: 1.5px solid var(--line-strong);
+	}
+
+	.logo {
+		font-family: 'Barlow Condensed', sans-serif;
+		font-weight: 900;
+		font-size: 1.5rem;
+		letter-spacing: 0.01em;
+		text-decoration: none;
+	}
+
+	.logo span {
+		color: var(--accent);
+	}
+
+	nav.primary {
+		display: flex;
+		align-items: center;
+		gap: 26px;
+		flex-wrap: wrap;
+	}
+
+	nav.primary a {
+		font-size: 0.92rem;
+		font-weight: 500;
+		text-decoration: none;
+		color: var(--ink-soft);
+	}
+
+	nav.primary a:hover {
+		color: var(--ink);
+	}
+
+	@media (max-width: 720px) {
+		nav.primary {
+			display: none;
+		}
+	}
+</style>

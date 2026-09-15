@@ -1,0 +1,250 @@
+/* ---------- design tokens ---------- */
+:root {
+  --paper: #fbf8f0;
+  --paper-card: #ffffff;
+  --ink: #14182b;
+  --ink-soft: #5b6178;
+  --line: #ded7c1;
+  --line-strong: #14182b;
+  --accent: #ff5a1f;
+  --accent-ink: #b83a0a;
+  --accent-soft: #fde7da;
+  --verified: #0f7a5a;
+  --verified-soft: #dff1e9;
+  --shadow: #14182b;
+  --hi-a: #ffe07a;
+  --hi-b: #cfe7ff;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #12141f;
+    --paper-card: #191c2c;
+    --ink: #f2efe4;
+    --ink-soft: #9ba0c0;
+    --line: #2c304a;
+    --line-strong: #f2efe4;
+    --accent: #ff7a47;
+    --accent-ink: #ffa679;
+    --accent-soft: #3a2a22;
+    --verified: #3fcb93;
+    --verified-soft: #183028;
+    --shadow: #000000;
+    --hi-a: #5c4a17;
+    --hi-b: #1e3a52;
+  }
+}
+
+:root[data-theme='dark'] {
+  --paper: #12141f;
+  --paper-card: #191c2c;
+  --ink: #f2efe4;
+  --ink-soft: #9ba0c0;
+  --line: #2c304a;
+  --line-strong: #f2efe4;
+  --accent: #ff7a47;
+  --accent-ink: #ffa679;
+  --accent-soft: #3a2a22;
+  --verified: #3fcb93;
+  --verified-soft: #183028;
+  --shadow: #000000;
+  --hi-a: #5c4a17;
+  --hi-b: #1e3a52;
+}
+
+/* ---------- base ---------- */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--paper);
+}
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: 'IBM Plex Sans', system-ui, sans-serif;
+  padding-inline: 22px;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+img {
+  max-width: 100%;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Barlow Condensed', system-ui, sans-serif;
+  margin: 0;
+  text-wrap: balance;
+  font-weight: 800;
+}
+
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 3px;
+}
+
+/* ---------- shared utilities ---------- */
+.mono {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-variant-numeric: tabular-nums;
+}
+
+.wrap {
+  max-width: 1100px;
+  margin-inline: auto;
+}
+
+.eyebrow {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: 0.76rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+}
+
+.eyebrow::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  background: var(--accent);
+  border-radius: 50%;
+  flex: none;
+}
+
+.mark {
+  background: var(--hi-a);
+  padding: 0 0.12em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.mark.b {
+  background: var(--hi-b);
+}
+
+.tick {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--line-strong);
+}
+
+.tick.tl {
+  top: -1.5px;
+  left: -1.5px;
+  border-right: none;
+  border-bottom: none;
+}
+
+.tick.tr {
+  top: -1.5px;
+  right: -1.5px;
+  border-left: none;
+  border-bottom: none;
+}
+
+.tick.bl {
+  bottom: -1.5px;
+  left: -1.5px;
+  border-right: none;
+  border-top: none;
+}
+
+.tick.br {
+  bottom: -1.5px;
+  right: -1.5px;
+  border-left: none;
+  border-top: none;
+}
+
+.btn-primary {
+  font-family: 'IBM Plex Sans', sans-serif;
+  font-weight: 700;
+  font-size: 0.98rem;
+  background: var(--accent);
+  color: #161200;
+  border: 1.5px solid var(--line-strong);
+  border-radius: 3px;
+  padding: 0.82em 1.3em;
+  text-decoration: none;
+  display: inline-block;
+  box-shadow: 4px 4px 0 var(--shadow);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+  cursor: pointer;
+}
+
+.btn-primary:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--shadow);
+}
+
+.btn-primary:active {
+  transform: translate(0, 0);
+  box-shadow: 2px 2px 0 var(--shadow);
+}
+
+.btn-primary.sm {
+  padding: 0.6em 1em;
+  font-size: 0.88rem;
+  box-shadow: 3px 3px 0 var(--shadow);
+}
+
+.btn-ghost {
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  color: var(--ink);
+  border-bottom: 1.5px solid var(--line-strong);
+  padding-bottom: 2px;
+}
+
+.btn-ghost:hover {
+  color: var(--accent-ink);
+  border-color: var(--accent-ink);
+}
+
+section.block {
+  max-width: 1100px;
+  margin-inline: auto;
+  padding-block: 64px;
+}
+
+.block-head {
+  margin-bottom: 30px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  flex-wrap: wrap;
+  border-bottom: 1.5px solid var(--line-strong);
+  padding-bottom: 18px;
+}
+
+.block-head h2 {
+  font-size: clamp(1.9rem, 3.6vw, 2.6rem);
+  letter-spacing: -0.01em;
+}
+
+.block-head p {
+  color: var(--ink-soft);
+  font-size: 1.02rem;
+  margin: 0;
+  max-width: 40ch;
+}

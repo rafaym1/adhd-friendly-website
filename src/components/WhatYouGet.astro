@@ -1,0 +1,167 @@
+---
+const items = [
+	{
+		exhibit: 'Exhibit 01 — Task breakdown',
+		title: 'AI vs. you, task by task',
+		desc: "We break your job into its real tasks, then show which ones AI can already do — and which ones still need you.",
+		size: 'big-cell',
+		stat: {
+			split: { ai: 35, human: 65 },
+			label: '61 tasks',
+			rest: 'scored — 35% AI, 65% human, for this example role',
+		},
+	},
+	{
+		exhibit: 'Exhibit 02 — Market data',
+		title: 'Live job market data',
+		desc: 'Salary, demand, skills and hiring trends for your exact role — researched and organized for you.',
+		size: 'wide-cell',
+		stat: { label: '290+', rest: 'data points pulled per job' },
+	},
+	{
+		exhibit: 'Exhibit 03 — Résumé',
+		title: 'Résumé, scored',
+		desc: "Upload your résumé. We score it against what this job actually requires and show the gaps.",
+		size: 'small-a',
+		stat: { label: '85%', rest: 'match, in this example' },
+	},
+];
+---
+
+<section class="block" id="get" data-audio-src={`${import.meta.env.BASE_URL}audio/what-you-get.wav`}>
+	<div class="block-head">
+		<h2>What you actually get</h2>
+		<p>Three things, built from one job title.</p>
+	</div>
+	<div class="bento">
+		{
+			items.map((item) => (
+				<div class:list={['bento-cell', item.size]}>
+					<div class="idx mono">{item.exhibit}</div>
+					<h3>{item.title}</h3>
+					<p class="desc">{item.desc}</p>
+					<div class="stat-line">
+						{item.stat.split && (
+							<div
+								class="mini-split"
+								role="img"
+								aria-label={`${item.stat.split.ai}% of this role's tasks can be done by AI, ${item.stat.split.human}% need a human`}
+							>
+								<div class="a" style={`width:${item.stat.split.ai}%`} />
+								<div class="h" style={`width:${item.stat.split.human}%`} />
+							</div>
+						)}
+						<b>{item.stat.label}</b> {item.stat.rest}
+					</div>
+				</div>
+			))
+		}
+	</div>
+</section>
+
+<style>
+	.bento {
+		display: grid;
+		grid-template-columns: repeat(4, 1fr);
+		grid-auto-rows: minmax(160px, auto);
+		gap: 22px;
+	}
+
+	.bento-cell {
+		background: var(--paper-card);
+		padding: 28px;
+		display: flex;
+		flex-direction: column;
+		border: 1.5px solid var(--line-strong);
+		border-radius: 3px;
+		box-shadow: 5px 5px 0 var(--shadow);
+	}
+
+	.bento-cell .idx {
+		font-size: 0.74rem;
+		color: var(--accent-ink);
+		font-weight: 600;
+		letter-spacing: 0.05em;
+		margin-bottom: 16px;
+		text-transform: uppercase;
+	}
+
+	.bento-cell.big-cell h3 {
+		font-size: 1.7rem;
+	}
+
+	.bento-cell h3 {
+		font-size: 1.35rem;
+		font-weight: 700;
+		margin: 0 0 10px;
+		font-family: 'IBM Plex Sans', sans-serif;
+		line-height: 1.2;
+	}
+
+	.bento-cell .desc {
+		font-size: 0.96rem;
+		line-height: 1.55;
+		color: var(--ink-soft);
+		margin: 0;
+	}
+
+	.bento-cell .stat-line {
+		margin-top: auto;
+		padding-top: 18px;
+		border-top: 1px solid var(--line);
+		font-size: 0.85rem;
+		color: var(--ink-soft);
+	}
+
+	.bento-cell .stat-line b {
+		font-family: 'IBM Plex Mono', monospace;
+		font-weight: 600;
+		color: var(--ink);
+		font-size: 1.1rem;
+	}
+
+	.bento-cell.big-cell {
+		grid-column: 1 / 3;
+		grid-row: 1 / 3;
+	}
+
+	.bento-cell.wide-cell {
+		grid-column: 3 / 5;
+		grid-row: 1 / 2;
+	}
+
+	.bento-cell.small-a {
+		grid-column: 3 / 5;
+		grid-row: 2 / 3;
+	}
+
+	@media (max-width: 760px) {
+		.bento {
+			grid-template-columns: 1fr;
+		}
+
+		.bento-cell.big-cell,
+		.bento-cell.wide-cell,
+		.bento-cell.small-a {
+			grid-column: auto;
+			grid-row: auto;
+		}
+	}
+
+	.mini-split {
+		height: 13px;
+		overflow: hidden;
+		display: flex;
+		margin: 12px 0 8px;
+		border: 1px solid var(--line-strong);
+		border-radius: 2px;
+	}
+
+	.mini-split .a {
+		background: var(--accent);
+	}
+
+	.mini-split .h {
+		background: var(--verified);
+	}
+</style>

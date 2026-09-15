@@ -1,0 +1,50 @@
+---
+const currentYear = new Date().getFullYear();
+const links = [
+	{ href: '#top', label: 'Home' },
+	{ href: '#get', label: 'How it works' },
+	{ href: '#', label: 'Pricing' },
+	{ href: '#', label: 'FAQ' },
+	{ href: '#', label: 'Contact' },
+];
+---
+
+<footer class="site">
+	<div>&copy; {currentYear} Uptomic — Personal Career Intelligence</div>
+	<nav>
+		{links.map((link) => <a href={link.href}>{link.label}</a>)}
+	</nav>
+</footer>
+
+<style>
+	footer.site {
+		max-width: 1100px;
+		margin-inline: auto;
+		padding-top: 24px;
+		padding-bottom: 40px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		gap: 16px;
+		flex-wrap: wrap;
+		font-size: 0.78rem;
+		color: var(--ink-soft);
+		border-top: 1.5px solid var(--line-strong);
+		font-family: 'IBM Plex Mono', monospace;
+	}
+
+	footer.site nav {
+		display: flex;
+		gap: 18px;
+		flex-wrap: wrap;
+	}
+
+	footer.site a {
+		text-decoration: none;
+		color: var(--ink-soft);
+	}
+
+	footer.site a:hover {
+		color: var(--ink);
+	}
+</style>

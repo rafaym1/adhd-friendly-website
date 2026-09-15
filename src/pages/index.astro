@@ -1,0 +1,22 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Hero from '../components/Hero.astro';
+import WhatYouGet from '../components/WhatYouGet.astro';
+import Comparison from '../components/Comparison.astro';
+import Reveals from '../components/Reveals.astro';
+import Closer from '../components/Closer.astro';
+import Footer from '../components/Footer.astro';
+---
+
+<BaseLayout>
+	<Header />
+	<main class="wrap">
+		<Hero />
+		<WhatYouGet />
+		<Comparison />
+		<Reveals />
+		<Closer />
+	</main>
+	<Footer />
+</BaseLayout>

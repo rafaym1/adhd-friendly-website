@@ -1,0 +1,183 @@
+---
+---
+
+<audio id="scroll-audio" preload="auto" playsinline></audio>
+
+<button
+	id="audio-toggle"
+	type="button"
+	aria-pressed="false"
+	aria-label="Mute background audio"
+>
+	<svg class="icon-muted" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+		<path d="M4 9v6h4l5 5V4L8 9H4Z" fill="currentColor" />
+		<path d="M17 8l5 8M22 8l-5 8" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
+	</svg>
+	<svg class="icon-unmuted" width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+		<path d="M4 9v6h4l5 5V4L8 9H4Z" fill="currentColor" />
+		<path
+			d="M16.5 8.5a5 5 0 0 1 0 7M19 6a9 9 0 0 1 0 12"
+			stroke="currentColor"
+			stroke-width="1.8"
+			stroke-linecap="round"
+		/>
+	</svg>
+</button>
+
+<style>
+	#scroll-audio {
+		display: none;
+	}
+
+	#audio-toggle {
+		position: fixed;
+		right: 22px;
+		bottom: 22px;
+		z-index: 40;
+		width: 48px;
+		height: 48px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--paper-card);
+		color: var(--ink);
+		border: 1.5px solid var(--line-strong);
+		border-radius: 50%;
+		box-shadow: 4px 4px 0 var(--shadow);
+		cursor: pointer;
+		padding: 0;
+		transition:
+			transform 0.12s ease,
+			box-shadow 0.12s ease;
+	}
+
+	#audio-toggle:hover {
+		transform: translate(-2px, -2px);
+		box-shadow: 6px 6px 0 var(--shadow);
+	}
+
+	#audio-toggle:active {
+		transform: translate(0, 0);
+		box-shadow: 2px 2px 0 var(--shadow);
+	}
+
+	.icon-unmuted {
+		display: none;
+	}
+
+	#audio-toggle[aria-pressed='false'] .icon-muted {
+		display: none;
+	}
+
+	#audio-toggle[aria-pressed='false'] .icon-unmuted {
+		display: block;
+	}
+</style>
+
+<script>
+	const audio = document.getElementById('scroll-audio') as HTMLAudioElement | null;
+	const toggle = document.getElementById('audio-toggle') as HTMLButtonElement | null;
+	const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-audio-src]'));
+
+	if (audio && toggle && sections.length > 0) {
+		const START_DELAY_MS = 3000;
+		const INTRO_SRC = new URL(import.meta.env.BASE_URL + 'audio/quote.wav', window.location.origin).href;
+		let activeSrc: string | null = null;
+		let isMuted = false;
+		let pendingPlay: ReturnType<typeof setTimeout> | null = null;
+		let introPlaying = false;
+
+		const resolveSrc = (path: string) => new URL(path, window.location.origin).href;
+
+		function attemptPlay() {
+			if (audio!.paused) audio!.play().catch(() => {});
+		}
+
+		function setActive(src: string) {
+			const resolved = resolveSrc(src);
+			if (resolved === activeSrc) return;
+			activeSrc = resolved;
+
+			if (pendingPlay !== null) {
+				clearTimeout(pendingPlay);
+				pendingPlay = null;
+			}
+
+			// The landing quote takes priority; let it keep playing and just remember
+			// which section is current so we can resume the right one once it ends.
+			if (introPlaying) return;
+
+			audio!.pause();
+			audio!.src = resolved;
+			audio!.currentTime = 0;
+
+			// Wait a beat once a section arrives before its audio starts, and drop the
+			// attempt entirely if the visitor has already scrolled past by then.
+			pendingPlay = setTimeout(() => {
+				pendingPlay = null;
+				if (activeSrc === resolved) attemptPlay();
+			}, START_DELAY_MS);
+		}
+
+		// Plays once, exactly 3 seconds after landing, no matter where the visitor has
+		// scrolled to by then — it always interrupts whatever is currently active.
+		setTimeout(() => {
+			introPlaying = true;
+			if (pendingPlay !== null) {
+				clearTimeout(pendingPlay);
+				pendingPlay = null;
+			}
+			audio!.pause();
+			audio!.src = INTRO_SRC;
+			audio!.currentTime = 0;
+			attemptPlay();
+		}, START_DELAY_MS);
+
+		audio.addEventListener('ended', () => {
+			if (audio!.src !== INTRO_SRC) return;
+			introPlaying = false;
+			// Hand off immediately to whichever section is current — no extra delay,
+			// the 3-second wait was already spent on the intro.
+			if (activeSrc) {
+				audio!.src = activeSrc;
+				audio!.currentTime = 0;
+				attemptPlay();
+			}
+		});
+
+		const observer = new IntersectionObserver(
+			(entries) => {
+				let best: IntersectionObserverEntry | null = null;
+				for (const entry of entries) {
+					if (entry.isIntersecting && (!best || entry.intersectionRatio > best.intersectionRatio)) {
+						best = entry;
+					}
+				}
+				const src = best?.target.getAttribute('data-audio-src');
+				if (src) setActive(src);
+			},
+			{ threshold: 0, rootMargin: '-45% 0px -45% 0px' }
+		);
+
+		sections.forEach((section) => observer.observe(section));
+
+		// Browsers block unmuted autoplay with no prior interaction, no exceptions.
+		// The moment the visitor engages with the page at all, unlock playback so the
+		// "unmuted by default" section audio can actually start firing.
+		const unlock = () => {
+			if (!isMuted) attemptPlay();
+			document.removeEventListener('pointerdown', unlock);
+			document.removeEventListener('keydown', unlock);
+		};
+		document.addEventListener('pointerdown', unlock, { once: true });
+		document.addEventListener('keydown', unlock, { once: true });
+
+		toggle.addEventListener('click', () => {
+			isMuted = !isMuted;
+			audio.muted = isMuted;
+			toggle.setAttribute('aria-pressed', String(isMuted));
+			toggle.setAttribute('aria-label', isMuted ? 'Unmute background audio' : 'Mute background audio');
+			if (!isMuted) attemptPlay();
+		});
+	}
+</script>

@@ -1,0 +1,144 @@
+---
+const rows = [
+	{
+		them: 'Show you jobs that exist today',
+		us: 'Shows how your specific job will change',
+	},
+	{
+		them: 'Generic advice for your field',
+		us: 'Built from your exact role, task by task',
+	},
+	{
+		them: "No visibility into AI's effect on your work",
+		us: '290+ data points, scored against AI exposure',
+	},
+	{
+		them: 'React after the fact',
+		us: 'Plan ahead of the change',
+	},
+];
+---
+
+<section class="block" id="why" data-audio-src={`${import.meta.env.BASE_URL}audio/comparison.wav`}>
+	<div class="block-head">
+		<h2>Not another job board.</h2>
+		<p>Most career tools tell you what's true today. Uptomic tells you what's changing.</p>
+	</div>
+	<div class="compare">
+		<div class="compare-head">
+			<div class="label">Most career tools</div>
+			<div class="answer">Uptomic</div>
+		</div>
+
+		{
+			rows.map((row) => (
+				<div class="compare-row">
+					<div class="label">
+						<span class="glyph no">✕</span>
+						{row.them}
+					</div>
+					<div class="answer">
+						<span class="glyph yes">✓</span>
+						{row.us}
+					</div>
+				</div>
+			))
+		}
+	</div>
+</section>
+
+<style>
+	.compare {
+		border: 1.5px solid var(--line-strong);
+		border-radius: 3px;
+		overflow: hidden;
+		background: var(--paper-card);
+		box-shadow: 5px 5px 0 var(--shadow);
+	}
+
+	.compare-head {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+		font-family: 'IBM Plex Mono', monospace;
+		font-size: 0.78rem;
+		text-transform: uppercase;
+		letter-spacing: 0.04em;
+	}
+
+	.compare-head div {
+		padding: 14px 26px;
+		border-bottom: 1.5px solid var(--line-strong);
+	}
+
+	.compare-head .label {
+		color: var(--ink-soft);
+	}
+
+	.compare-head .answer {
+		color: var(--accent-ink);
+		font-weight: 600;
+		background: var(--accent-soft);
+		border-left: 1.5px solid var(--line-strong);
+	}
+
+	.compare-row {
+		display: grid;
+		grid-template-columns: 1fr 1fr;
+	}
+
+	.compare-row + .compare-row {
+		border-top: 1px solid var(--line);
+	}
+
+	.compare-row .label,
+	.compare-row .answer {
+		padding: 18px 26px;
+		font-size: 0.96rem;
+		line-height: 1.4;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+	}
+
+	.compare-row .answer {
+		border-left: 1.5px solid var(--line-strong);
+		background: var(--accent-soft);
+		font-weight: 500;
+	}
+
+	.compare-row .label {
+		color: var(--ink-soft);
+	}
+
+	.glyph {
+		flex: none;
+		font-family: 'IBM Plex Mono', monospace;
+		font-weight: 700;
+		font-size: 0.85rem;
+		width: 1.4em;
+		height: 1.4em;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+	}
+
+	.glyph.no {
+		color: var(--ink-soft);
+		border: 1.5px solid var(--line);
+	}
+
+	.glyph.yes {
+		color: #fff;
+		background: var(--verified);
+	}
+
+	@media (max-width: 640px) {
+		.compare-head div,
+		.compare-row .label,
+		.compare-row .answer {
+			padding: 14px 16px;
+			font-size: 0.88rem;
+		}
+	}
+</style>
