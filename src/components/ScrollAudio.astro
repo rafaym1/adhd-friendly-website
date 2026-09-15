@@ -80,11 +80,10 @@
 	const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-audio-src]'));
 
 	if (audio && toggle && sections.length > 0) {
-		const START_DELAY_MS = 3000;
+		const INTRO_DELAY_MS = 3000;
 		const INTRO_SRC = new URL(import.meta.env.BASE_URL + 'audio/quote.wav', window.location.origin).href;
 		let activeSrc: string | null = null;
 		let isMuted = false;
-		let pendingPlay: ReturnType<typeof setTimeout> | null = null;
 		let introPlaying = false;
 
 		const resolveSrc = (path: string) => new URL(path, window.location.origin).href;
@@ -98,11 +97,6 @@
 			if (resolved === activeSrc) return;
 			activeSrc = resolved;
 
-			if (pendingPlay !== null) {
-				clearTimeout(pendingPlay);
-				pendingPlay = null;
-			}
-
 			// The landing quote takes priority; let it keep playing and just remember
 			// which section is current so we can resume the right one once it ends.
 			if (introPlaying) return;
@@ -110,28 +104,18 @@
 			audio!.pause();
 			audio!.src = resolved;
 			audio!.currentTime = 0;
-
-			// Wait a beat once a section arrives before its audio starts, and drop the
-			// attempt entirely if the visitor has already scrolled past by then.
-			pendingPlay = setTimeout(() => {
-				pendingPlay = null;
-				if (activeSrc === resolved) attemptPlay();
-			}, START_DELAY_MS);
+			attemptPlay();
 		}
 
 		// Plays once, exactly 3 seconds after landing, no matter where the visitor has
 		// scrolled to by then — it always interrupts whatever is currently active.
 		setTimeout(() => {
 			introPlaying = true;
-			if (pendingPlay !== null) {
-				clearTimeout(pendingPlay);
-				pendingPlay = null;
-			}
 			audio!.pause();
 			audio!.src = INTRO_SRC;
 			audio!.currentTime = 0;
 			attemptPlay();
-		}, START_DELAY_MS);
+		}, INTRO_DELAY_MS);
 
 		audio.addEventListener('ended', () => {
 			if (audio!.src !== INTRO_SRC) return;
