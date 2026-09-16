@@ -1,6 +1,16 @@
 ---
 ---
 
+<div id="entry-gate" role="dialog" aria-modal="true" aria-label="Enter Uptomic">
+	<div class="gate-card">
+		<span class="tick tl"></span><span class="tick tr"></span><span class="tick bl"></span><span class="tick br"
+		></span>
+		<div class="gate-logo">UP<span>TOM</span>IC</div>
+		<p class="gate-tag mono">Personal career intelligence</p>
+		<button id="gate-enter" type="button" class="btn-primary" autofocus>Enter site →</button>
+	</div>
+</div>
+
 <audio id="scroll-audio" preload="auto" playsinline></audio>
 
 <button
@@ -72,14 +82,73 @@
 	#audio-toggle[aria-pressed='false'] .icon-unmuted {
 		display: block;
 	}
+
+	#entry-gate {
+		position: fixed;
+		inset: 0;
+		z-index: 100;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		background: var(--paper);
+		padding: 24px;
+	}
+
+	#entry-gate[hidden] {
+		display: none;
+	}
+
+	.gate-card {
+		position: relative;
+		max-width: 380px;
+		width: 100%;
+		padding: 48px 36px;
+		text-align: center;
+		background: var(--paper-card);
+		border: 1.5px solid var(--line-strong);
+		border-radius: 4px;
+		box-shadow: 6px 6px 0 var(--shadow);
+	}
+
+	.gate-logo {
+		font-family: 'Barlow Condensed', sans-serif;
+		font-weight: 900;
+		font-size: 1.8rem;
+		margin-bottom: 10px;
+	}
+
+	.gate-logo span {
+		color: var(--accent);
+	}
+
+	.gate-tag {
+		color: var(--ink-soft);
+		font-size: 0.78rem;
+		letter-spacing: 0.06em;
+		text-transform: uppercase;
+		margin: 0 0 28px;
+	}
 </style>
 
 <script>
 	const audio = document.getElementById('scroll-audio') as HTMLAudioElement | null;
 	const toggle = document.getElementById('audio-toggle') as HTMLButtonElement | null;
+	const gate = document.getElementById('entry-gate');
 	const sections = Array.from(document.querySelectorAll<HTMLElement>('[data-audio-src]'));
 
 	if (audio && toggle && sections.length > 0) {
+		if (gate) {
+			document.documentElement.style.overflow = 'hidden';
+			gate.addEventListener(
+				'click',
+				() => {
+					document.documentElement.style.overflow = '';
+					gate.remove();
+				},
+				{ once: true }
+			);
+		}
+
 		const INTRO_SRC = new URL(import.meta.env.BASE_URL + 'audio/quote.wav', window.location.origin).href;
 		let activeSrc: string | null = null;
 		let isMuted = false;
@@ -158,5 +227,7 @@
 			toggle.setAttribute('aria-label', isMuted ? 'Unmute background audio' : 'Mute background audio');
 			if (!isMuted) attemptPlay();
 		});
+	} else {
+		gate?.remove();
 	}
 </script>
